@@ -1,25 +1,30 @@
 package univ.lecture.riotapi.controller;
 
-import lombok.extern.log4j.Log4j;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import univ.lecture.riotapi.model.Summoner;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
+import lombok.extern.log4j.Log4j;
+import univ.lecture.riotapi.Calculator;
+import univ.lecture.riotapi.model.Summoner;
 
 /**
  * Created by tchi on 2017. 4. 1..
  */
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/calc")
 @Log4j
 public class RiotApiController {
     @Autowired
@@ -31,7 +36,7 @@ public class RiotApiController {
     @Value("${riot.api.key}")
     private String riotApiKey;
 
-    @RequestMapping(value = "/summoner/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+ /*   @RequestMapping(value = "/summoner/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Summoner querySummoner(@PathVariable("name") String summonerName) throws UnsupportedEncodingException {
         final String url = riotApiEndpoint + "/summoner/by-name/" +
                 summonerName +
@@ -49,5 +54,22 @@ public class RiotApiController {
         Summoner summoner = new Summoner(queriedName, queriedLevel);
 
         return summoner;
+    }*/
+        
+        @RequestMapping(value = "/calc/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+        public Summoner querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
+            final String url = riotApiEndpoint;                   
+            Calculator calc=new Calculator();
+ 
+            int teamId =7;
+            long now = System.currentTimeMillis(); 
+    		//SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+    		//String now = dayTime.format(new Date(time));
+    		double result = calc.calculate(equation);
+           
+            Summoner summoner = new Summoner(teamId,now,result);
+
+            return summoner;
+   
     }
 }
