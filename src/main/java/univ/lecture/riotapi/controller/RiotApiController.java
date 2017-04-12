@@ -67,14 +67,14 @@ public class RiotApiController {
             int teamId = 7;
             long now = System.currentTimeMillis(); 
             double result = calc.calculate(equation);
-                                                 
-            Gson gson = new Gson();
+                                                           
             Summoner summoner = new Summoner(teamId,now,result);
+            Gson gson = new Gson();
             String request = gson.toJson(summoner);
-            String msg =restTemplate.postForObject(url, request, String.class);
+            String string = restTemplate.postForObject(url, request, String.class);
+            return string;
             //String  = new Summoner(teamId,now,result,msg);
             
-          return msg;
           
     }
 }
