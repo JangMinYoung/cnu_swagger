@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.Gson;
 
 import lombok.extern.log4j.Log4j;
 import univ.lecture.riotapi.Calculator;
@@ -57,31 +60,30 @@ public class RiotApiController {
     }*/
         
         @RequestMapping(value = "/calc/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-        public Summoner querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
+        public @ResponseBody String querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
             final String url = riotApiEndpoint;                   
             Calculator calc=new Calculator();
-            String response = restTemplate.getForObject(url, String.class);
-            Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);
-                            
-            parsedMap.forEach((key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));          
             
-            Map<String, Object> summonerDetail = (Map<String, Object>) parsedMap.values().toArray()[0];
+            int teamId = 7;
+            long now = System.currentTimeMillis(); 
+            double result = calc.calculate(equation);
+                                       
+            Summoner summoner = new Summoner(teamId,now,result);
             
-  
-            int teamId = (Integer)summonerDetail.get("teamId");
-            teamId=7;
-            long now = (long)summonerDetail.get("now");
-            now = System.currentTimeMillis(); 
-            double result = (double)summonerDetail.get("result");
-            result = calc.calculate(equation);
+            Gson gson = new Gson();
+            String request = gson.toJson(summoner);
+            String string = restTemplate.postForObject(url, request, String.class);
             
-//            int teamId =7;
-//            long now = System.currentTimeMillis(); 
+          return string;
+           
+            
+//          int teamId =7;
+//          long now = System.currentTimeMillis(); 
 //    		double result = calc.calculate(equation);
            
-            Summoner summoner = new Summoner(teamId,now,result);
+           
 
-            return summoner;
+        
    
     }
 }
