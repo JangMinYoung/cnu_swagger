@@ -16,10 +16,5 @@ public class Summoner {
     private long now;
     private double result;
     private String msg;
-//    public Summoner(int teamId, String now, double result) {
-//		this.teamId=teamId;
-//		this.now=now;
-//		this.result=result;
-//  	}
  
 }

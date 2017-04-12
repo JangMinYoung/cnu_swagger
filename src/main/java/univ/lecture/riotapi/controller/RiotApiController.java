@@ -69,21 +69,12 @@ public class RiotApiController {
             double result = calc.calculate(equation);
                                                  
             Gson gson = new Gson();
-            Summoner summoner = new Summoner(teamId,now,result,null);
+            Summoner summoner = new Summoner(teamId,now,result);
             String request = gson.toJson(summoner);
             String msg =restTemplate.postForObject(url, request, String.class);
             Summoner summoner2 = new Summoner(teamId,now,result,msg);
            
           return summoner2;
-           
-            
-//          int teamId =7;
-//          long now = System.currentTimeMillis(); 
-//    		double result = calc.calculate(equation);
-           
-           
-
-        
-   
+          
     }
 }
