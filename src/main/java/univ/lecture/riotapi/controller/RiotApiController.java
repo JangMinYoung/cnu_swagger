@@ -60,7 +60,7 @@ public class RiotApiController {
     }*/
         
         @RequestMapping(value = "/calc/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-        public @ResponseBody String querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
+        public String querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
             final String url = riotApiEndpoint;                   
             Calculator calc=new Calculator();
             
