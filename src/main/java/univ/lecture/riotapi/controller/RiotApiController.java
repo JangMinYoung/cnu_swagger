@@ -72,12 +72,9 @@ public class RiotApiController {
             
             Gson gson = new Gson();
             String request = gson.toJson(summoner);
-            gson.toJson(teamId);
-            gson.toJson(now);
-            gson.toJson(result);
             String string =restTemplate.postForObject(url, request, String.class);
            
-          return string;
+          return summoner+string;
            
             
 //          int teamId =7;
