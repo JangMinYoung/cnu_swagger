@@ -60,12 +60,24 @@ public class RiotApiController {
         public Summoner querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
             final String url = riotApiEndpoint;                   
             Calculator calc=new Calculator();
- 
-            int teamId =7;
-            long now = System.currentTimeMillis(); 
-    		//SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-    		//String now = dayTime.format(new Date(time));
-    		double result = calc.calculate(equation);
+            String response = restTemplate.getForObject(url, String.class);
+            Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);
+                            
+            parsedMap.forEach((key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));          
+            
+            Map<String, Object> summonerDetail = (Map<String, Object>) parsedMap.values().toArray()[0];
+            
+  
+            int teamId = (Integer)summonerDetail.get("teamId");
+            teamId=7;
+            long now = (long)summonerDetail.get("now");
+            now = System.currentTimeMillis(); 
+            double result = (double)summonerDetail.get("result");
+            result = calc.calculate(equation);
+            
+//            int teamId =7;
+//            long now = System.currentTimeMillis(); 
+//    		double result = calc.calculate(equation);
            
             Summoner summoner = new Summoner(teamId,now,result);
 
